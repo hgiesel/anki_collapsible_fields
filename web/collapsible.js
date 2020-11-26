@@ -19,10 +19,35 @@ var CollapsibleFields = {
   toggleCollapsedCurrent: () => {
     if (currentField) {
       const currentId = Number(currentField.id.match(CollapsibleFields.trailingNumberRegex))
-      CollapsibleFields.toggleCollapsed(currentId)
+      const target = document.getElementById(`name${currentId}`)
+      CollapsibleFields.toggleCollapsed(target)
     }
   },
 
+  /**
+   * For Shortcuts
+   **/
+  isEmpty: (idx) => {
+    const field = document.getElementById(`f${idx}`)
+
+    return (
+      field.innerHTML === "" || field.innerHTML == "<br>"
+    )
+  },
+
+  showIfNonEmpty: (idx) => {
+    if (!CollapsibleFields.isEmpty(idx)) {
+      CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), false)
+    }
+  },
+
+  hide: (idx) => {
+      CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), true)
+  },
+
+  /**
+   * Loading
+   **/
   trailingNumberRegex: /[0-9]+$/,
 
   loadIcons: () => {

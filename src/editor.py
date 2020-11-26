@@ -1,24 +1,42 @@
+from itertools import cycle
+
 from aqt.gui_hooks import editor_will_load_note, editor_did_init_shortcuts
 
 from .utils import (
     get_toggle_field,
     get_toggle_all,
+    collapse_by_default_keyword,
 )
 
 
 def toggle_field(editor):
-    editor.web.eval('Collapsible.toggleCollapsedCurrent()')
+    editor.web.eval('CollapsibleFields.toggleCollapsedCurrent()')
+
+
+collapse_modes = cycle([
+    'show_nonempty',
+    'hide_nonempty',
+])
+
+
+# only targets collapse_by_default fields
+def show_nonempty(editor, id: int) -> None:
+    editor.web.eval(f'CollapsibleFields.showIfNonEmpty({id})')
+
+
+def hide_nonempty(editor, id: int) -> None:
+    editor.web.eval(f'CollapsibleFields.hide({id})')
 
 
 def toggle_all(editor):
     model = editor.note.model()
+    next_mode = next(collapse_modes)
 
-    any_sticky = any(map(lambda fld: fld['sticky'], model['flds']))
+    func = show_nonempty if next_mode == 'show_nonempty' else hide_nonempty
 
-    # set all to False, if any sticky, otherwise True
     for id, fld in enumerate(model['flds']):
-        # if fld['sticky'] == any_sticky:
-        editor.web.eval(f'CollapsibleFields.toggleCollapsed({id})')
+        if fld[collapse_by_default_keyword] if collapse_by_default_keyword in fld else False:
+            func(editor, id)
 
 
 def add_collapse_fields_shortcuts(cuts, editor):
