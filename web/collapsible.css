@@ -1,36 +1,34 @@
-.fname {
-  pointer-events: none;
-}
-
-.fname::before {
+.fname .collapse-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
 
   margin-right: 5px;
 
-  content: "  ";
   background-image: url('../icons/open-black.png');
-  background-size: 100% 100%;
-  pointer-events: all;
+  background-size: cover;
 }
 
-.fname.is-collapsed::before {
+.nightMode .fname .collapse-icon {
+  background-image: url('../icons/open-white.png');
+}
+
+.night_mode .fname .collapse-icon {
+  background-image: url('../icons/open-white.png');
+}
+
+.is-collapsed .fname .collapse-icon {
   background-image: url('../icons/closed-black.png');
 }
 
-.nightMode .fname::before {
-  background-image: url('../icons/open-white.png');
-}
-
-.night_mode .fname::before {
-  background-image: url('../icons/open-white.png');
-}
-
-.nightMode .fname.is-collapsed::before {
+.nightMode .is-collapsed .fname .collapse-icon {
   background-image: url('../icons/closed-white.png');
 }
 
-.night_mode .fname.is-collapsed::before {
+.night_mode .is-collapsed .fname .collapse-icon {
   background-image: url('../icons/closed-white.png');
+}
+
+.is-collapsed + tr {
+  display: none;
 }

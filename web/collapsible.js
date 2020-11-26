@@ -1,20 +1,19 @@
 var CollapsibleFields = {
   getCollapsed: (target) => {
-    return target.classList.contains('is-collapsed')
+    return target.parentElement.classList.contains('is-collapsed')
   },
 
   setCollapsed: (target, isCollapsed) => {
     if (isCollapsed) {
-      target.classList.add('is-collapsed')
+      target.parentElement.classList.add('is-collapsed')
     }
     else {
-      target.classList.remove('is-collapsed')
+      target.parentElement.classList.remove('is-collapsed')
     }
   },
 
-  toggleCollapsed: (idx) => {
-    const fname = document.getElementById(`name${idx}`)
-    CollapsibleFields.setCollapsed(fname, !CollapsibleFields.getCollapsed(fname))
+  toggleCollapsed: (target) => {
+    CollapsibleFields.setCollapsed(target, !CollapsibleFields.getCollapsed(target))
   },
 
   toggleCollapsedCurrent: () => {
@@ -32,10 +31,13 @@ var CollapsibleFields = {
     for (const fname of fnames) {
       const idx = fname.id.match(CollapsibleFields.trailingNumberRegex)
 
-      fname.addEventListener('click', () => {
-        pycmd(`toggle_collapsed:${idx}`, (isCollapsed) => {
-          CollapsibleFields.setCollapsed(fname, isCollapsed)
-        })
+      const collapseIcon = document.createElement('i')
+      collapseIcon.classList.add('collapse-icon')
+
+      fname.insertBefore(collapseIcon, fname.firstChild)
+
+      collapseIcon.addEventListener('click', () => {
+        CollapsibleFields.toggleCollapsed(fname)
       })
 
       pycmd(`get_collapsed_by_default:${idx}`, (isCollapsed) => {
