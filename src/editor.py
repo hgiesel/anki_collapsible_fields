@@ -13,13 +13,6 @@ def toggle_field(editor):
     editor.web.eval('CollapsibleFields.toggleCollapsedCurrent()')
 
 
-collapse_modes = cycle([
-    'show_nonempty',
-    'hide_nonempty',
-])
-
-
-# only targets collapse_by_default fields
 def show_nonempty(editor, id: int) -> None:
     editor.web.eval(f'CollapsibleFields.showIfNonEmpty({id})')
 
@@ -28,15 +21,20 @@ def hide_nonempty(editor, id: int) -> None:
     editor.web.eval(f'CollapsibleFields.hide({id})')
 
 
+collapse_modes = cycle([
+    show_nonempty,
+    hide_nonempty,
+])
+
+
 def toggle_all(editor):
     model = editor.note.model()
     next_mode = next(collapse_modes)
 
-    func = show_nonempty if next_mode == 'show_nonempty' else hide_nonempty
-
     for id, fld in enumerate(model['flds']):
+        # only targets collapse_by_default fields
         if fld[collapse_by_default_keyword] if collapse_by_default_keyword in fld else False:
-            func(editor, id)
+            next_mode(editor, id)
 
 
 def add_collapse_fields_shortcuts(cuts, editor):
@@ -45,7 +43,7 @@ def add_collapse_fields_shortcuts(cuts, editor):
 
     cuts.extend([
         (toggle_field_shortcut, lambda: toggle_field(editor)),
-        (toggle_all_shortcut, lambda: toggle_all(editor)),
+        (toggle_all_shortcut, lambda: toggle_all(editor), True),
     ])
 
 
