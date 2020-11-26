@@ -1,1 +1,1 @@
-# Ze Frozen Fields for Anki
+# Collapsible Fields for Anki
