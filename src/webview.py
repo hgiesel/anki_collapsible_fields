@@ -8,6 +8,8 @@ from aqt.gui_hooks import (
 from aqt.editor import Editor
 from aqt.schema_change_tracker import ChangeTracker
 
+from .utils import collapse_by_default_keyword
+
 
 mw.addonManager.setWebExports(__name__, r'(web|icons)/.*\.(js|css|png)')
 
@@ -24,14 +26,15 @@ def load_collapsible_icon_js(webcontent, context):
 def sticky_getter_and_setter(handled, message, context: Editor):
     cmd = message.split(':', 1)
 
-    if cmd[0] in ['toggle_collapsed', 'get_collapsed']:
+    if cmd[0] in 'get_collapsed_by_default':
         model = context.note.model()
         idx = int(cmd[1])
+        fld = model['flds'][idx]
 
-        if cmd[0] == 'toggle_collapsed':
-            pass
-
-        return (True, None)
+        return (
+            True,
+            fld[collapse_by_default_keyword] if collapse_by_default_keyword in fld else False,
+        )
 
     return handled
 

@@ -6,14 +6,6 @@ from .utils import (
 )
 
 
-def show_collapsible_icons(js, note, editor):
-    newjs = js
-    if editor.addMode:
-        newjs = js + '; CollapsibleFields.loadIcons(); '
-
-    return newjs
-
-
 def toggle_field(editor):
     editor.web.eval('Collapsible.toggleCollapsedCurrent()')
 
@@ -38,6 +30,10 @@ def add_collapse_fields_shortcuts(cuts, editor):
         (toggle_all_shortcut, lambda: toggle_all(editor)),
     ])
 
+
+def show_collapsible_icons(js, note, editor):
+    newjs = js + '; CollapsibleFields.loadIcons(); '
+    return newjs
 
 def init_editor():
     editor_did_init_shortcuts.append(add_collapse_fields_shortcuts)
