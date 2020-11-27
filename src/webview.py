@@ -23,7 +23,7 @@ def load_collapsible_icon_js(webcontent, context):
         webcontent.js.append(f"{base_path}/collapsible.js")
 
 
-def sticky_getter_and_setter(handled, message, context: Editor):
+def handle_collapsible_messages(handled, message, context: Editor):
     cmd = message.split(":", 1)
 
     if cmd[0] in "get_collapsed_by_default":
@@ -35,13 +35,14 @@ def sticky_getter_and_setter(handled, message, context: Editor):
         # old one, there can be an IndexError
         try:
             fld = model["flds"][idx]
-            default = (
-                fld[collapse_by_default_keyword]
-                if collapse_by_default_keyword in fld
-                else False
-            )
         except IndexError:
-            default = False
+            fld = {}
+
+        default = (
+            fld[collapse_by_default_keyword]
+            if collapse_by_default_keyword in fld
+            else False
+        )
 
         return (True, default)
 
@@ -50,4 +51,4 @@ def sticky_getter_and_setter(handled, message, context: Editor):
 
 def init_webview():
     webview_will_set_content.append(load_collapsible_icon_js)
-    webview_did_receive_js_message.append(sticky_getter_and_setter)
+    webview_did_receive_js_message.append(handle_collapsible_messages)
