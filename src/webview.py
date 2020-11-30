@@ -26,7 +26,7 @@ def load_collapsible_icon_js(webcontent, context):
 def handle_collapsible_messages(handled, message, context: Editor):
     cmd = message.split(":", 1)
 
-    if cmd[0] in "get_collapsed_by_default":
+    if cmd[0] == "get_collapsed_by_default" and isinstance(context, Editor):
         model = context.note.model()
         idx = int(cmd[1])
 
