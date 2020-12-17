@@ -5,7 +5,7 @@ from aqt.gui_hooks import (
     webview_did_receive_js_message,
 )
 
-from aqt.editor import Editor
+from aqt.editor import Editor, munge_html
 from aqt.schema_change_tracker import ChangeTracker
 
 from .utils import collapse_by_default_keyword
@@ -23,28 +23,38 @@ def load_collapsible_icon_js(webcontent, context):
         webcontent.js.append(f"{base_path}/collapsible.js")
 
 
-def handle_collapsible_messages(handled, message, context: Editor):
-    cmd = message.split(":", 1)
+def handle_collapsible_messages(handled, cmd, context):
+    if isinstance(context, Editor):
+        editor: Editor = context
 
-    if cmd[0] == "get_collapsed_by_default" and isinstance(context, Editor):
-        model = context.note.model()
-        idx = int(cmd[1])
+        if cmd.startswith("get_collapsed_by_default"):
+            _, idx_string = cmd.split(":", 1)
 
-        # when changing note type, the model will reflect the old model the first
-        # time this function is called if the new model has more fields, than the
-        # old one, there can be an IndexError
-        try:
-            fld = model["flds"][idx]
-        except IndexError:
-            fld = {}
+            model = editor.note.model()
+            idx = int(idx_string)
 
-        default = (
-            fld[collapse_by_default_keyword]
-            if collapse_by_default_keyword in fld
-            else False
-        )
+            # when changing note type, the model will reflect the old model the first
+            # time this function is called if the new model has more fields, than the
+            # old one, there can be an IndexError
+            try:
+                fld = model["flds"][idx]
+            except IndexError:
+                fld = {}
 
-        return (True, default)
+            default = (
+                fld[collapse_by_default_keyword]
+                if collapse_by_default_keyword in fld
+                else False
+            )
+
+            return (True, default)
+
+        if cmd.startswith("key"):
+            type, ord, _nid, txt = cmd.split(":", 3)
+
+            is_empty = munge_html(txt, editor) == ""
+            is_empty_string: str = "true" if  is_empty else "false"
+            editor.web.eval(f"CollapsibleFields.showEmptyStatus({ord}, {is_empty_string})")
 
     return handled
 

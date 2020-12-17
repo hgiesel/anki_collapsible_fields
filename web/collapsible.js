@@ -2,34 +2,49 @@ var CollapsibleFields = {
   /**
    * Actions on Fields
    **/
-  getCollapsed: (field) => {
-    return field.parentElement.classList.contains('is-collapsed')
+  getCollapsed: (fname) => {
+    return fname.parentElement.classList.contains('is-collapsed')
   },
 
-  setCollapsed: (field, collapsed) => {
+  setCollapsed: (fname, collapsed) => {
+    const className = 'is-collapsed'
+
     if (collapsed) {
-      field.parentElement.classList.add('is-collapsed')
+      fname.parentElement.classList.add(className)
     }
     else {
-      field.parentElement.classList.remove('is-collapsed')
+      fname.parentElement.classList.remove(className)
     }
   },
 
-  toggleCollapsed: (field) => {
-    field.parentElement.classList.toggle('is-collapsed')
+  setEmptyStatus: (fname, emptyStatus) => {
+    const className = 'is-collapsed--empty'
+
+    if (emptyStatus) {
+      fname.parentElement.classList.add(className)
+    }
+    else {
+      fname.parentElement.classList.remove(className)
+    }
+  },
+
+  toggleCollapsed: (fname) => {
+    fname.parentElement.classList.toggle('is-collapsed')
   },
 
   toggleCollapsedCurrent: () => {
-    if (currentField) {
-      const currentId = Number(currentField.id.match(CollapsibleFields.trailingNumberRegex))
-      const target = document.getElementById(`name${currentId}`)
-      CollapsibleFields.toggleCollapsed(target)
+    if (!currentField) {
+      return
     }
+
+    const currentId = Number(currentField.id.match(CollapsibleFields.trailingNumberRegex))
+    const fname = document.getElementById(`name${currentId}`)
+    CollapsibleFields.toggleCollapsed(fname)
   },
 
   isFieldEmpty: (field) => {
     return (
-      field.innerHTML === "" || field.innerHTML == "<br>"
+      ["", "<br>", "<div><br></div>"].includes(field.innerHTML)
     )
   },
 
@@ -38,6 +53,10 @@ var CollapsibleFields = {
    **/
   isEmpty: (idx) => {
     return CollapsibleFields.isFieldEmpty(document.getElementById(`f${idx}`))
+  },
+
+  showEmptyStatus: (idx, emptyStatus) => {
+    CollapsibleFields.setEmptyStatus(document.getElementById(`name${idx}`), emptyStatus)
   },
 
   showIfNonEmpty: (idx) => {
@@ -73,6 +92,8 @@ var CollapsibleFields = {
       pycmd(`get_collapsed_by_default:${idx}`, (isCollapsed) => {
         CollapsibleFields.setCollapsed(fname, isCollapsed)
       })
+
+      CollapsibleFields.setEmptyStatus(fname, CollapsibleFields.isEmpty(idx))
     }
   },
 }
