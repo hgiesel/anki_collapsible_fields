@@ -8,7 +8,7 @@ from aqt.gui_hooks import state_did_reset
 from anki.models import NoteType
 from anki.hooks import wrap
 
-from .utils import collapse_by_default_keyword
+from .utils import collapse_by_default, collapse_by_default_keyword
 
 
 def init_collapsible_option(self):
@@ -37,11 +37,7 @@ def load_collapsible_option(self, idx):
     self.currentIdx = idx
     fld = self.model["flds"][idx]
 
-    self.form.collapsible.setChecked(
-        fld[collapse_by_default_keyword]
-        if collapse_by_default_keyword in fld
-        else False
-    )
+    self.form.collapsible.setChecked(collapse_by_default(fld))
 
 
 def init_field_dialog():

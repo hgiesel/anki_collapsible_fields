@@ -42,31 +42,19 @@ var CollapsibleFields = {
     CollapsibleFields.toggleCollapsed(fname)
   },
 
-  isFieldEmpty: (field) => {
-    return (
-      ["", "<br>", "<div><br></div>"].includes(field.innerHTML)
-    )
-  },
-
   /**
    * For Shortcuts
    **/
-  isEmpty: (idx) => {
-    return CollapsibleFields.isFieldEmpty(document.getElementById(`f${idx}`))
-  },
-
   showEmptyStatus: (idx, emptyStatus) => {
     CollapsibleFields.setEmptyStatus(document.getElementById(`name${idx}`), emptyStatus)
   },
 
-  showIfNonEmpty: (idx) => {
-    if (!CollapsibleFields.isEmpty(idx)) {
-      CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), false)
-    }
+  show: (idx) => {
+    CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), false)
   },
 
   hide: (idx) => {
-      CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), true)
+    CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), true)
   },
 
   /**
@@ -74,7 +62,7 @@ var CollapsibleFields = {
    **/
   trailingNumberRegex: /[0-9]+$/,
 
-  loadIcons: (collapsedByDefault) => {
+  loadIcons: (options) => {
     const fnames = document.querySelectorAll('.fname')
 
     for (const fname of fnames) {
@@ -89,8 +77,13 @@ var CollapsibleFields = {
         CollapsibleFields.toggleCollapsed(fname)
       })
 
-      CollapsibleFields.setCollapsed(fname, collapsedByDefault[idx])
-      CollapsibleFields.setEmptyStatus(fname, CollapsibleFields.isEmpty(idx))
+      const [
+        collapsedByDefault,
+        empty,
+      ] = options[idx]
+
+      CollapsibleFields.setCollapsed(fname, collapsedByDefault)
+      CollapsibleFields.setEmptyStatus(fname, empty)
     }
   },
 }

@@ -4,22 +4,25 @@ from itertools import cycle
 from aqt.gui_hooks import editor_will_load_note, editor_did_init_shortcuts
 
 from .utils import (
-    get_toggle_field,
-    get_toggle_all,
-    collapse_by_default_keyword,
+    toggle_field,
+    toggle_all,
+    collapse_by_default,
+    text_is_empty,
 )
 
 
-def toggle_field(editor):
+def toggle_current(editor):
     editor.web.eval("CollapsibleFields.toggleCollapsedCurrent()")
 
 
-def show_nonempty(editor, id: int) -> None:
-    editor.web.eval(f"CollapsibleFields.showIfNonEmpty({id})")
+def show_nonempty(editor, fld, id: int, text: str) -> None:
+    if collapse_by_default(fld) and not text_is_empty(editor, text):
+        editor.web.eval(f"CollapsibleFields.show({id})")
 
 
-def hide_nonempty(editor, id: int) -> None:
-    editor.web.eval(f"CollapsibleFields.hide({id})")
+def hide_nonempty(editor, fld, id: int, _text: str) -> None:
+    if collapse_by_default(fld):
+        editor.web.eval(f"CollapsibleFields.hide({id})")
 
 
 collapse_modes = cycle(
@@ -30,28 +33,21 @@ collapse_modes = cycle(
 )
 
 
-def toggle_all(editor):
-    model = editor.note.model()
+def toggle_fields(editor):
+    note = editor.note
+    model = note.model()
+    fields = note.fields
     next_mode = next(collapse_modes)
 
     for id, fld in enumerate(model["flds"]):
-        # only targets collapse_by_default fields
-        if (
-            fld[collapse_by_default_keyword]
-            if collapse_by_default_keyword in fld
-            else False
-        ):
-            next_mode(editor, id)
+        next_mode(editor, fld, id, fields[id])
 
 
 def add_collapse_fields_shortcuts(cuts, editor):
-    toggle_field_shortcut = get_toggle_field()
-    toggle_all_shortcut = get_toggle_all()
-
     cuts.extend(
         [
-            (toggle_field_shortcut, lambda: toggle_field(editor)),
-            (toggle_all_shortcut, lambda: toggle_all(editor), True),
+            (toggle_field.value, lambda: toggle_current(editor)),
+            (toggle_all.value, lambda: toggle_fields(editor), True),
         ]
     )
 
@@ -59,15 +55,16 @@ def add_collapse_fields_shortcuts(cuts, editor):
 def show_collapsible_icons(js, note, editor):
     flds = note.model()["flds"]
 
-    def get_status(fld) -> str:
-        return (
-            fld[collapse_by_default_keyword]
-            if collapse_by_default_keyword in fld
-            else False
+    options = []
+    for id, text in enumerate(note.fields):
+        options.append(
+            [
+                collapse_by_default(flds[id]),
+                text_is_empty(editor, text),
+            ]
         )
 
-    arg = dumps(list(map(get_status, flds)))
-    newjs = js + f"; CollapsibleFields.loadIcons({arg}); "
+    newjs = js + f"; CollapsibleFields.loadIcons({dumps(options)}); "
 
     return newjs
 

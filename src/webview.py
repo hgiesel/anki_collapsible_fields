@@ -6,11 +6,9 @@ from aqt.gui_hooks import (
     webview_will_set_content,
     webview_did_receive_js_message,
 )
+from aqt.editor import Editor
 
-from aqt.editor import Editor, munge_html
-from aqt.schema_change_tracker import ChangeTracker
-
-from .utils import collapse_by_default_keyword
+from .utils import text_is_empty
 
 
 mw.addonManager.setWebExports(__name__, r"(web|icons)/.*\.(js|css|png)")
@@ -30,9 +28,9 @@ def handle_collapsible_messages(handled, cmd, context):
         editor: Editor = context
 
         if cmd.startswith("key"):
-            type, ord, _nid, txt = cmd.split(":", 3)
+            type, ord, _nid, text = cmd.split(":", 3)
 
-            is_empty = dumps(munge_html(txt, editor) == "")
+            is_empty = dumps(text_is_empty(editor, text))
             editor.web.eval(f"CollapsibleFields.showEmptyStatus({ord}, {is_empty})")
 
     return handled
