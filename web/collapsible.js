@@ -1,19 +1,22 @@
 var CollapsibleFields = {
-  getCollapsed: (target) => {
-    return target.parentElement.classList.contains('is-collapsed')
+  /**
+   * Actions on Fields
+   **/
+  getCollapsed: (field) => {
+    return field.parentElement.classList.contains('is-collapsed')
   },
 
-  setCollapsed: (target, isCollapsed) => {
-    if (isCollapsed) {
-      target.parentElement.classList.add('is-collapsed')
+  setCollapsed: (field, collapsed) => {
+    if (collapsed) {
+      field.parentElement.classList.add('is-collapsed')
     }
     else {
-      target.parentElement.classList.remove('is-collapsed')
+      field.parentElement.classList.remove('is-collapsed')
     }
   },
 
-  toggleCollapsed: (target) => {
-    CollapsibleFields.setCollapsed(target, !CollapsibleFields.getCollapsed(target))
+  toggleCollapsed: (field) => {
+    field.parentElement.classList.toggle('is-collapsed')
   },
 
   toggleCollapsedCurrent: () => {
@@ -24,15 +27,17 @@ var CollapsibleFields = {
     }
   },
 
+  isFieldEmpty: (field) => {
+    return (
+      field.innerHTML === "" || field.innerHTML == "<br>"
+    )
+  },
+
   /**
    * For Shortcuts
    **/
   isEmpty: (idx) => {
-    const field = document.getElementById(`f${idx}`)
-
-    return (
-      field.innerHTML === "" || field.innerHTML == "<br>"
-    )
+    return CollapsibleFields.isFieldEmpty(document.getElementById(`f${idx}`))
   },
 
   showIfNonEmpty: (idx) => {
