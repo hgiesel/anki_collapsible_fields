@@ -1,3 +1,5 @@
+from json import dumps
+
 from aqt import mw
 
 from aqt.gui_hooks import (
@@ -27,34 +29,11 @@ def handle_collapsible_messages(handled, cmd, context):
     if isinstance(context, Editor):
         editor: Editor = context
 
-        if cmd.startswith("get_collapsed_by_default"):
-            _, idx_string = cmd.split(":", 1)
-
-            model = editor.note.model()
-            idx = int(idx_string)
-
-            # when changing note type, the model will reflect the old model the first
-            # time this function is called if the new model has more fields, than the
-            # old one, there can be an IndexError
-            try:
-                fld = model["flds"][idx]
-            except IndexError:
-                fld = {}
-
-            default = (
-                fld[collapse_by_default_keyword]
-                if collapse_by_default_keyword in fld
-                else False
-            )
-
-            return (True, default)
-
         if cmd.startswith("key"):
             type, ord, _nid, txt = cmd.split(":", 3)
 
-            is_empty = munge_html(txt, editor) == ""
-            is_empty_string: str = "true" if  is_empty else "false"
-            editor.web.eval(f"CollapsibleFields.showEmptyStatus({ord}, {is_empty_string})")
+            is_empty = dumps(munge_html(txt, editor) == "")
+            editor.web.eval(f"CollapsibleFields.showEmptyStatus({ord}, {is_empty})")
 
     return handled
 

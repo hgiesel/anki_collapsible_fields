@@ -74,7 +74,7 @@ var CollapsibleFields = {
    **/
   trailingNumberRegex: /[0-9]+$/,
 
-  loadIcons: () => {
+  loadIcons: (collapsedByDefault) => {
     const fnames = document.querySelectorAll('.fname')
 
     for (const fname of fnames) {
@@ -89,10 +89,7 @@ var CollapsibleFields = {
         CollapsibleFields.toggleCollapsed(fname)
       })
 
-      pycmd(`get_collapsed_by_default:${idx}`, (isCollapsed) => {
-        CollapsibleFields.setCollapsed(fname, isCollapsed)
-      })
-
+      CollapsibleFields.setCollapsed(fname, collapsedByDefault[idx])
       CollapsibleFields.setEmptyStatus(fname, CollapsibleFields.isEmpty(idx))
     }
   },

@@ -7,9 +7,9 @@ toggle_all_keyword = "collapsibleFieldsToggleAll"
 collapse_by_default_keyword = "collapsibleFieldsCollapseByDefault"
 
 
-def get_toggle_field():
+def get_toggle_field() -> str:
     return mw.pm.profile.get(toggle_field_keyword, "F10")
 
 
-def get_toggle_all():
+def get_toggle_all() -> str:
     return mw.pm.profile.get(toggle_all_keyword, "Shift+F10")

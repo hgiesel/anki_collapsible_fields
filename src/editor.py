@@ -1,3 +1,4 @@
+from json import dumps
 from itertools import cycle
 
 from aqt.gui_hooks import editor_will_load_note, editor_did_init_shortcuts
@@ -47,14 +48,27 @@ def add_collapse_fields_shortcuts(cuts, editor):
     toggle_field_shortcut = get_toggle_field()
     toggle_all_shortcut = get_toggle_all()
 
-    cuts.extend([
-        (toggle_field_shortcut, lambda: toggle_field(editor)),
-        (toggle_all_shortcut, lambda: toggle_all(editor), True),
-    ])
+    cuts.extend(
+        [
+            (toggle_field_shortcut, lambda: toggle_field(editor)),
+            (toggle_all_shortcut, lambda: toggle_all(editor), True),
+        ]
+    )
 
 
 def show_collapsible_icons(js, note, editor):
-    newjs = js + "; CollapsibleFields.loadIcons(); "
+    flds = note.model()["flds"]
+
+    def get_status(fld) -> str:
+        return (
+            fld[collapse_by_default_keyword]
+            if collapse_by_default_keyword in fld
+            else False
+        )
+
+    arg = dumps(list(map(get_status, flds)))
+    newjs = js + f"; CollapsibleFields.loadIcons({arg}); "
+
     return newjs
 
 
