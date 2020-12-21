@@ -7,7 +7,7 @@ from .utils import (
     toggle_field,
     toggle_all,
     collapse_by_default,
-    text_is_empty,
+    is_text_empty,
 )
 
 
@@ -16,7 +16,7 @@ def toggle_current(editor):
 
 
 def show_nonempty(editor, fld, id: int, text: str) -> None:
-    if collapse_by_default(fld) and not text_is_empty(editor, text):
+    if collapse_by_default(fld) and not is_text_empty(editor, text):
         editor.web.eval(f"CollapsibleFields.show({id})")
 
 
@@ -60,7 +60,7 @@ def show_collapsible_icons(js, note, editor):
         options.append(
             [
                 collapse_by_default(flds[id]),
-                text_is_empty(editor, text),
+                is_text_empty(editor, text),
             ]
         )
 

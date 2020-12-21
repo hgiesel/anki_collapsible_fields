@@ -8,7 +8,7 @@ from aqt.gui_hooks import (
 )
 from aqt.editor import Editor
 
-from .utils import text_is_empty
+from .utils import is_text_empty
 
 
 mw.addonManager.setWebExports(__name__, r"(web|icons)/.*\.(js|css|png)")
@@ -30,7 +30,7 @@ def handle_collapsible_messages(handled, cmd, context):
         if cmd.startswith("key"):
             _type, ord, _nid, text = cmd.split(":", 3)
 
-            is_empty = dumps(text_is_empty(editor, text))
+            is_empty = dumps(is_text_empty(editor, text))
             editor.web.eval(f"CollapsibleFields.showEmptyStatus({ord}, {is_empty})")
 
     return handled

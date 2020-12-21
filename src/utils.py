@@ -40,5 +40,5 @@ def collapse_by_default(fld) -> bool:
     )
 
 
-def text_is_empty(editor, text) -> bool:
+def is_text_empty(editor, text) -> bool:
     return editor.mungeHTML(text) == ""
