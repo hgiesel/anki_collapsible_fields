@@ -28,7 +28,7 @@ def handle_collapsible_messages(handled, cmd, context):
         editor: Editor = context
 
         if cmd.startswith("key"):
-            type, ord, _nid, text = cmd.split(":", 3)
+            _type, ord, _nid, text = cmd.split(":", 3)
 
             is_empty = dumps(text_is_empty(editor, text))
             editor.web.eval(f"CollapsibleFields.showEmptyStatus({ord}, {is_empty})")

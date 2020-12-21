@@ -39,5 +39,16 @@
 /** HIDE FIELD **/
 
 .is-collapsed + tr {
-  display: none;
+  /** visually hidden, still available for selections **/
+  position: absolute; 
+  overflow: hidden; 
+  clip: rect(0 0 0 0); 
+  height: 1px; width: 1px; 
+  margin: -1px; padding: 0; border: 0; 
+}
+
+/** CLEAR FIELD **/
+
+.collapsible-clear-mode .fieldname {
+  cursor: no-drop;
 }

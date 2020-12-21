@@ -2,6 +2,7 @@ from aqt import QDialog, QLayout, QKeySequence
 
 from .forms.settings_ui import Ui_Settings
 
+
 class Settings(QDialog):
     def __init__(self, addons, callback):
         super().__init__(parent=addons)

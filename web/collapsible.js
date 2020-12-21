@@ -32,6 +32,30 @@ var CollapsibleFields = {
     fname.parentElement.classList.toggle('is-collapsed')
   },
 
+  clearField: (idx) => {
+    const field = document.getElementById(`f${idx}`)
+
+    const sel = globalThis.getSelection()
+    sel.removeAllRanges()
+    sel.selectAllChildren(field)
+
+    if (sel.anchorOffset !== 0) {
+      // force selection hack
+      sel.selectAllChildren(field)
+    }
+
+    console.log(
+      sel.toString(),
+      sel.toString().length,
+      sel.anchorNode.id,
+      sel.anchorOffset,
+      sel.focusNode.id,
+      sel.focusOffset,
+    )
+
+    globalThis.setFormat('delete')
+  },
+
   toggleCollapsedCurrent: () => {
     if (!currentField) {
       return
@@ -63,11 +87,41 @@ var CollapsibleFields = {
   trailingNumberRegex: /[0-9]+$/,
 
   loadIcons: (options) => {
+
+    // Clearing functionality for field name
+    document.addEventListener('keydown', (event) => {
+      if (event.shiftKey && event.altKey) {
+        event.preventDefault()
+        document.body.classList.add('collapsible-clear-mode')
+      }
+    })
+
+    document.addEventListener('keyup', (event) => {
+      if (!(event.shiftKey && event.altKey)) {
+        document.body.classList.remove('collapsible-clear-mode')
+      }
+    })
+
+    const clearFieldIfModifiers = (idx) => (event) => {
+      if (event.shiftKey && event.altKey) {
+        CollapsibleFields.clearField(idx)
+      }
+    }
+
     const fnames = document.querySelectorAll('.fname')
 
     for (const fname of fnames) {
       const idx = fname.id.match(CollapsibleFields.trailingNumberRegex)
 
+      // Clearing functionality for field name
+      const fieldname = fname.querySelector('.fieldname')
+
+      // NOTE this will activate itself in probably 2.1.38 or 39
+      if (fieldname) {
+        fieldname.addEventListener('click', clearFieldIfModifiers(idx))
+      }
+
+      // Collapse functionality for icon
       const collapseIcon = document.createElement('i')
       collapseIcon.classList.add('collapse-icon')
 
