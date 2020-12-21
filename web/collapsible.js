@@ -1,4 +1,6 @@
 var CollapsibleFields = {
+  trailingNumberRegex: /[0-9]+$/,
+
   /**
    * Actions on Fields
    **/
@@ -9,11 +11,25 @@ var CollapsibleFields = {
   setCollapsed: (fname, collapsed) => {
     const className = 'is-collapsed'
 
+    const idx = fname.id.match(CollapsibleFields.trailingNumberRegex)
+    const field = document.getElementById(`f${idx}`)
+
     if (collapsed) {
       fname.parentElement.classList.add(className)
+      field.tabIndex = -1
     }
     else {
       fname.parentElement.classList.remove(className)
+      field.tabIndex = ''
+    }
+  },
+
+  toggleCollapsed: (fname) => {
+    if (CollapsibleFields.getCollapsed(fname)) {
+      CollapsibleFields.setCollapsed(fname, false)
+    }
+    else {
+      CollapsibleFields.setCollapsed(fname, true)
     }
   },
 
@@ -26,10 +42,6 @@ var CollapsibleFields = {
     else {
       fname.parentElement.classList.remove(className)
     }
-  },
-
-  toggleCollapsed: (fname) => {
-    fname.parentElement.classList.toggle('is-collapsed')
   },
 
   clearField: (idx) => {
@@ -84,8 +96,6 @@ var CollapsibleFields = {
   /**
    * Loading
    **/
-  trailingNumberRegex: /[0-9]+$/,
-
   loadIcons: (options) => {
 
     // Clearing functionality for field name
