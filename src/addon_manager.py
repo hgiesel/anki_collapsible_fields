@@ -31,10 +31,10 @@ def save_addons_window(addons):
 def show_settings():
     dialog = Settings(addons_current, set_settings)
 
-    toggle_field_shortcut = toggle_field.value
-    toggle_all_shortcut = toggle_all.value
-
-    dialog.setupUi(toggle_field_shortcut, toggle_all_shortcut)
+    dialog.setupUi(
+        toggle_field.value,
+        toggle_all.value,
+    )
     return dialog.exec_()
 
 
