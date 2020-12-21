@@ -35,7 +35,7 @@ def show_settings():
         toggle_field.value,
         toggle_all.value,
     )
-    return dialog.exec_()
+    return dialog.open()
 
 
 def init_addon_manager():
