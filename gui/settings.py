@@ -12,8 +12,6 @@ class Settings(QDialog):
 
         self.cb = callback
 
-        self.layout().setSizeConstraint(QLayout.SetFixedSize)
-
     def setupUi(self, toggle_field_shortcut: str, toggle_all_shortcut: str):
         self.ui.toggleFieldShortcut.setKeySequence(QKeySequence(toggle_field_shortcut))
         self.ui.toggleAllShortcut.setKeySequence(QKeySequence(toggle_all_shortcut))

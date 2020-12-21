@@ -22,7 +22,13 @@
   <property name="windowTitle">
    <string>Collapsible Fields Settings</string>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetFixedSize</enum>
+   </property>
    <item row="1" column="1">
     <widget class="QKeySequenceEdit" name="toggleAllShortcut">
      <property name="toolTip">
