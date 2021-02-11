@@ -58,7 +58,7 @@ var CollapsibleFields = {
             return
         }
 
-        CollapsibleFields.toggleCollapsed(currentField.editingArea.ord)
+        CollapsibleFields.toggleCollapsed(currentField.ord)
     },
 
     /**
