@@ -14,11 +14,11 @@ var CollapsibleFields = {
 
     if (collapsed) {
       editorField.labelContainer.classList.add(className)
-      editorField.tabIndex = -1
+      editorField.editingArea.setAttribute("tabindex", "-1")
     }
     else {
       editorField.labelContainer.classList.remove(className)
-      editorField.tabIndex = ''
+      editorField.editingArea.removeAttribute("tabindex")
     }
   },
 
@@ -76,15 +76,15 @@ var CollapsibleFields = {
    * For Shortcuts
    **/
   showEmptyStatus: (idx, emptyStatus) => {
-    CollapsibleFields.setEmptyStatus(document.getElementById(`name${idx}`), emptyStatus)
+    CollapsibleFields.setEmptyStatus(idx, emptyStatus)
   },
 
   show: (idx) => {
-    CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), false)
+    CollapsibleFields.setCollapsed(idx, false)
   },
 
   hide: (idx) => {
-    CollapsibleFields.setCollapsed(document.getElementById(`name${idx}`), true)
+    CollapsibleFields.setCollapsed(idx, true)
   },
 
   /**
