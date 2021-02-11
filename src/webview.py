@@ -27,7 +27,7 @@ def handle_collapsible_messages(handled, cmd, context):
     if isinstance(context, Editor):
         editor: Editor = context
 
-        if cmd.startswith("key"):
+        if cmd.startswith("key") or cmd.startswith("blur"):
             _type, ord, _nid, text = cmd.split(":", 3)
 
             is_empty = dumps(is_text_empty(editor, text))
