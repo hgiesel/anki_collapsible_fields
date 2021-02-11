@@ -113,7 +113,7 @@ var CollapsibleFields = {
                     clearFieldIfModifiers(field.editingArea.ord),
                 )
 
-                const collapseIcon = document.createElement('i')
+                const collapseIcon = document.createElement('span')
                 collapseIcon.classList.add('collapse-icon')
 
                 collapseIcon.addEventListener('click', () => {

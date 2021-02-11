@@ -64,9 +64,7 @@ def show_collapsible_icons(js, note, editor):
             ]
         )
 
-    newjs = js + f"; CollapsibleFields.loadIcons({dumps(options)}); "
-
-    return newjs
+    return js + f"CollapsibleFields.loadIcons({dumps(options)}); "
 
 
 def init_editor():
