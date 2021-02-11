@@ -38,7 +38,7 @@
 
 /** HIDE FIELD **/
 
-.is-collapsed + tr {
+.is-collapsed .field {
   /** visually hidden, still available for selections **/
   position: absolute; 
   overflow: hidden; 

@@ -3,19 +3,19 @@ var CollapsibleFields = {
    * Actions on Fields
    **/
   getCollapsed: (idx) => {
-    return getEditorField(idx).labelContainer.classList.contains('is-collapsed')
+    return getEditorField(idx).classList.contains('is-collapsed')
   },
 
   setCollapsed: (idx, collapsed) => {
     const className = 'is-collapsed'
     const editorField = getEditorField(idx)
 
+    editorField.classList.toggle(className, collapsed)
+
     if (collapsed) {
-      editorField.labelContainer.classList.add(className)
       editorField.editingArea.setAttribute("tabindex", "-1")
     }
     else {
-      editorField.labelContainer.classList.remove(className)
       editorField.editingArea.removeAttribute("tabindex")
     }
   },
@@ -33,7 +33,7 @@ var CollapsibleFields = {
     const className = 'is-collapsed--empty'
     const editorField = getEditorField(idx)
 
-    editorField.labelContainer.classList.toggle(className, emptyStatus)
+    editorField.classList.toggle(className, emptyStatus)
   },
 
   clearField: (idx) => {
