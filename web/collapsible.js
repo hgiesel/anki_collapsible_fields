@@ -4,44 +4,38 @@ var CollapsibleFields = {
   /**
    * Actions on Fields
    **/
-  getCollapsed: (fname) => {
-    return fname.parentElement.classList.contains('is-collapsed')
+  getCollapsed: (idx) => {
+    return getEditorField(idx).labelContainer.classList.contains('is-collapsed')
   },
 
-  setCollapsed: (fname, collapsed) => {
+  setCollapsed: (idx, collapsed) => {
     const className = 'is-collapsed'
-
-    const idx = fname.id.match(CollapsibleFields.trailingNumberRegex)
-    const field = document.getElementById(`f${idx}`)
+    const editorField = getEditorField(idx)
 
     if (collapsed) {
-      fname.parentElement.classList.add(className)
-      field.tabIndex = -1
+      editorField.labelContainer.classList.add(className)
+      editorField.tabIndex = -1
     }
     else {
-      fname.parentElement.classList.remove(className)
-      field.tabIndex = ''
+      editorField.labelContainer.classList.remove(className)
+      editorField.tabIndex = ''
     }
   },
 
-  toggleCollapsed: (fname) => {
-    if (CollapsibleFields.getCollapsed(fname)) {
-      CollapsibleFields.setCollapsed(fname, false)
+  toggleCollapsed: (idx) => {
+    if (CollapsibleFields.getCollapsed(idx)) {
+      CollapsibleFields.setCollapsed(idx, false)
     }
     else {
-      CollapsibleFields.setCollapsed(fname, true)
+      CollapsibleFields.setCollapsed(idx, true)
     }
   },
 
-  setEmptyStatus: (fname, emptyStatus) => {
+  setEmptyStatus: (idx, emptyStatus) => {
     const className = 'is-collapsed--empty'
+    const editorField = getEditorField(idx)
 
-    if (emptyStatus) {
-      fname.parentElement.classList.add(className)
-    }
-    else {
-      fname.parentElement.classList.remove(className)
-    }
+    editorField.labelContainer.classList.toggle(className, emptyStatus)
   },
 
   clearField: (idx) => {
@@ -97,7 +91,6 @@ var CollapsibleFields = {
    * Loading
    **/
   loadIcons: (options) => {
-
     // Clearing functionality for field name
     document.addEventListener('keydown', (event) => {
       if (event.shiftKey && event.altKey) {
@@ -118,36 +111,28 @@ var CollapsibleFields = {
       }
     }
 
-    const fnames = document.querySelectorAll('.fname')
+    forEditorField(options, (field, [collapsedByDefault, empty]) => {
+      field.label.addEventListener(
+        'click',
+        clearFieldIfModifiers(field.editingArea.ord),
+      )
 
-    for (const fname of fnames) {
-      const idx = fname.id.match(CollapsibleFields.trailingNumberRegex)
+      const ord = field.editingArea.ord
 
-      // Clearing functionality for field name
-      const fieldname = fname.querySelector('.fieldname')
+      if (!field.hasAttribute("has-collapsible")) {
+        const collapseIcon = document.createElement('i')
+        collapseIcon.classList.add('collapse-icon')
 
-      // NOTE this will activate itself in probably 2.1.38 or 39
-      if (fieldname) {
-        fieldname.addEventListener('click', clearFieldIfModifiers(idx))
+        collapseIcon.addEventListener('click', () => {
+          CollapsibleFields.toggleCollapsed(ord)
+        })
+
+        field.labelContainer.insertBefore(collapseIcon, field.label)
+        field.setAttribute("has-frozen", "")
       }
 
-      // Collapse functionality for icon
-      const collapseIcon = document.createElement('i')
-      collapseIcon.classList.add('collapse-icon')
-
-      fname.insertBefore(collapseIcon, fname.firstChild)
-
-      collapseIcon.addEventListener('click', () => {
-        CollapsibleFields.toggleCollapsed(fname)
-      })
-
-      const [
-        collapsedByDefault,
-        empty,
-      ] = options[idx]
-
-      CollapsibleFields.setCollapsed(fname, collapsedByDefault)
-      CollapsibleFields.setEmptyStatus(fname, empty)
-    }
+      CollapsibleFields.setCollapsed(ord, collapsedByDefault)
+      CollapsibleFields.setEmptyStatus(ord, empty)
+    })
   },
 }

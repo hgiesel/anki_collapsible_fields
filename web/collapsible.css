@@ -6,7 +6,7 @@
   --lime: invert(74%) sepia(60%) saturate(1880%) hue-rotate(40deg) brightness(105%) contrast(107%);
 }
 
-.fname .collapse-icon {
+.collapse-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
@@ -20,19 +20,19 @@
   filter: var(--green);
 }
 
-.is-collapsed .fname .collapse-icon {
+.is-collapsed .collapse-icon {
   background-image: url('../icons/closed.png');
 }
 
-.is-collapsed--empty .fname .collapse-icon {
+.is-collapsed--empty .collapse-icon {
   filter: var(--black);
 }
 
-.nightMode .fname .collapse-icon {
+.nightMode .collapse-icon {
   filter: var(--lime);
 }
 
-.nightMode .is-collapsed--empty .fname .collapse-icon {
+.nightMode .is-collapsed--empty .collapse-icon {
   filter: var(--white);
 }
 
