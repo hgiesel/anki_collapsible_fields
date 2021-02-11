@@ -37,25 +37,16 @@ var CollapsibleFields = {
   },
 
   clearField: (idx) => {
-    const field = document.getElementById(`f${idx}`)
+    const editable = getEditorField(idx).editingArea.editable
 
     const sel = globalThis.getSelection()
     sel.removeAllRanges()
-    sel.selectAllChildren(field)
+    sel.selectAllChildren(editable)
 
     if (sel.anchorOffset !== 0) {
       // force selection hack
       sel.selectAllChildren(field)
     }
-
-    console.log(
-      sel.toString(),
-      sel.toString().length,
-      sel.anchorNode.id,
-      sel.anchorOffset,
-      sel.focusNode.id,
-      sel.focusOffset,
-    )
 
     globalThis.setFormat('delete')
   },
@@ -110,14 +101,14 @@ var CollapsibleFields = {
     }
 
     forEditorField(options, (field, [collapsedByDefault, empty]) => {
-      field.label.addEventListener(
-        'click',
-        clearFieldIfModifiers(field.editingArea.ord),
-      )
-
       const ord = field.editingArea.ord
 
       if (!field.hasAttribute("has-collapsible")) {
+        field.label.addEventListener(
+          'click',
+          clearFieldIfModifiers(field.editingArea.ord),
+        )
+
         const collapseIcon = document.createElement('i')
         collapseIcon.classList.add('collapse-icon')
 
