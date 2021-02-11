@@ -1,6 +1,4 @@
 var CollapsibleFields = {
-  trailingNumberRegex: /[0-9]+$/,
-
   /**
    * Actions on Fields
    **/
@@ -63,13 +61,13 @@ var CollapsibleFields = {
   },
 
   toggleCollapsedCurrent: () => {
+    const currentField = getCurrentField()
+
     if (!currentField) {
       return
     }
 
-    const currentId = Number(currentField.id.match(CollapsibleFields.trailingNumberRegex))
-    const fname = document.getElementById(`name${currentId}`)
-    CollapsibleFields.toggleCollapsed(fname)
+    CollapsibleFields.toggleCollapsed(currentField.editingArea.ord)
   },
 
   /**
