@@ -84,7 +84,6 @@ var CollapsibleFields = {
         if (!document.body.hasAttribute("has-collapsible")) {
             document.addEventListener('keydown', (event) => {
                 if (event.shiftKey && event.altKey) {
-                    event.preventDefault()
                     document.body.classList.add('collapsible-clear-mode')
                 }
             })
