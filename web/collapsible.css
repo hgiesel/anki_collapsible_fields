@@ -20,6 +20,15 @@
   filter: var(--green);
 }
 
+.collapse-icon::after {
+  position: absolute;
+  content: "";
+  width: 22px;
+  height: 22px;
+  left: -6px;
+  top: -2px;
+}
+
 .is-collapsed .collapse-icon {
   background-image: url('../icons/closed.png');
 }
