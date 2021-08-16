@@ -107,7 +107,7 @@ var CollapsibleFields = {
             const ord = field.editingArea.ord
 
             if (!field.hasAttribute("has-collapsible")) {
-                field.label.addEventListener(
+                field.labelContainer.label.addEventListener(
                     'click',
                     clearFieldIfModifiers(field.editingArea.ord),
                 )
@@ -119,12 +119,19 @@ var CollapsibleFields = {
                     CollapsibleFields.toggleCollapsed(ord)
                 })
 
-                field.labelContainer.insertBefore(collapseIcon, field.label)
+                CollapsibleFields.addIconToField(field, collapseIcon)
                 field.setAttribute("has-collapsible", "")
             }
 
             CollapsibleFields.setCollapsed(ord, collapsedByDefault)
             CollapsibleFields.setEmptyStatus(ord, empty)
         })
+    },
+    addIconToField: (field, icon) => {
+        field.labelContainer.insertBefore(icon, field.labelContainer.label.nextSibling)
+        field.labelContainer.style.setProperty("justify-content", "flex-end")
+
+        // move label back to the left
+        field.labelContainer.label.style.setProperty("margin-right", "auto")
     },
 }
