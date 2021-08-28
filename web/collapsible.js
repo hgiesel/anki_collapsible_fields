@@ -3,77 +3,79 @@ var CollapsibleFields = {
      * Actions on Fields
      **/
     getCollapsed: (idx) => {
-        return getEditorField(idx).classList.contains('is-collapsed')
+        return getEditorField(idx).classList.contains("is-collapsed");
     },
 
     setCollapsed: (idx, collapsed) => {
-        const className = 'is-collapsed'
-        const editorField = getEditorField(idx)
+        const className = "is-collapsed";
+        const editorField = getEditorField(idx);
 
-        editorField.classList.toggle(className, collapsed)
+        editorField.classList.toggle(className, collapsed);
 
         if (collapsed) {
-            editorField.editingArea.setAttribute("tabindex", "-1")
-        }
-        else {
-            editorField.editingArea.removeAttribute("tabindex")
+            editorField.editingArea.setAttribute("tabindex", "-1");
+        } else {
+            editorField.editingArea.removeAttribute("tabindex");
         }
     },
 
     toggleCollapsed: (idx) => {
         if (CollapsibleFields.getCollapsed(idx)) {
-            CollapsibleFields.setCollapsed(idx, false)
-        }
-        else {
-            CollapsibleFields.setCollapsed(idx, true)
+            CollapsibleFields.setCollapsed(idx, false);
+        } else {
+            CollapsibleFields.setCollapsed(idx, true);
         }
     },
 
     setEmptyStatus: (idx, emptyStatus) => {
-        const className = 'is-collapsed--empty'
-        const editorField = getEditorField(idx)
+        const className = "is-collapsed--empty";
+        const editorField = getEditorField(idx);
 
-        editorField.classList.toggle(className, emptyStatus)
+        editorField.classList.toggle(className, emptyStatus);
     },
 
     clearField: (idx) => {
-        const editable = getEditorField(idx).editingArea.editable
+        const editable = getEditorField(idx).editingArea.editable;
 
-        const sel = globalThis.getSelection()
-        sel.removeAllRanges()
-        sel.selectAllChildren(editable)
+        const sel = globalThis.getSelection();
+        sel.removeAllRanges();
+        sel.selectAllChildren(editable);
 
         if (sel.anchorOffset !== 0) {
             // force selection hack
-            sel.selectAllChildren(editable)
+            sel.selectAllChildren(editable);
         }
 
-        globalThis.setFormat('delete')
+        globalThis.setFormat("delete");
+
+        if (CollapsibleFields.getCollapsed(idx)) {
+            sel.removeAllRanges();
+        }
     },
 
     toggleCollapsedCurrent: () => {
-        const currentField = getCurrentField()
+        const currentField = getCurrentField();
 
         if (!currentField) {
-            return
+            return;
         }
 
-        CollapsibleFields.toggleCollapsed(currentField.ord)
+        CollapsibleFields.toggleCollapsed(currentField.ord);
     },
 
     /**
      * For Shortcuts
      **/
     showEmptyStatus: (idx, emptyStatus) => {
-        CollapsibleFields.setEmptyStatus(idx, emptyStatus)
+        CollapsibleFields.setEmptyStatus(idx, emptyStatus);
     },
 
     show: (idx) => {
-        CollapsibleFields.setCollapsed(idx, false)
+        CollapsibleFields.setCollapsed(idx, false);
     },
 
     hide: (idx) => {
-        CollapsibleFields.setCollapsed(idx, true)
+        CollapsibleFields.setCollapsed(idx, true);
     },
 
     /**
@@ -82,56 +84,53 @@ var CollapsibleFields = {
     loadIcons: (options) => {
         // Clearing functionality for field name
         if (!document.body.hasAttribute("has-collapsible")) {
-            document.addEventListener('keydown', (event) => {
+            document.addEventListener("keydown", (event) => {
                 if (event.shiftKey && event.altKey) {
-                    document.body.classList.add('collapsible-clear-mode')
+                    document.body.classList.add("collapsible-clear-mode");
                 }
-            })
+            });
 
-            document.addEventListener('keyup', (event) => {
+            document.addEventListener("keyup", (event) => {
                 if (!(event.shiftKey && event.altKey)) {
-                    document.body.classList.remove('collapsible-clear-mode')
+                    document.body.classList.remove("collapsible-clear-mode");
                 }
-            })
+            });
 
-            document.body.setAttribute("has-collapsible", "")
+            document.body.setAttribute("has-collapsible", "");
         }
 
         const clearFieldIfModifiers = (idx) => (event) => {
             if (event.shiftKey && event.altKey) {
-                CollapsibleFields.clearField(idx)
+                CollapsibleFields.clearField(idx);
             }
-        }
+        };
 
         forEditorField(options, (field, [collapsedByDefault, empty]) => {
-            const ord = field.editingArea.ord
+            const ord = field.editingArea.ord;
 
             if (!field.hasAttribute("has-collapsible")) {
                 field.labelContainer.label.addEventListener(
-                    'click',
-                    clearFieldIfModifiers(field.editingArea.ord),
-                )
+                    "click",
+                    clearFieldIfModifiers(field.editingArea.ord)
+                );
 
-                const collapseIcon = document.createElement('span')
-                collapseIcon.classList.add('collapse-icon')
+                const collapseIcon = document.createElement("span");
+                collapseIcon.classList.add("collapse-icon");
 
-                collapseIcon.addEventListener('click', () => {
-                    CollapsibleFields.toggleCollapsed(ord)
-                })
+                collapseIcon.addEventListener("click", () => {
+                    CollapsibleFields.toggleCollapsed(ord);
+                });
 
-                CollapsibleFields.addIconToField(field, collapseIcon)
-                field.setAttribute("has-collapsible", "")
+                CollapsibleFields.addIconToField(field, collapseIcon);
+                field.setAttribute("has-collapsible", "");
             }
 
-            CollapsibleFields.setCollapsed(ord, collapsedByDefault)
-            CollapsibleFields.setEmptyStatus(ord, empty)
-        })
+            CollapsibleFields.setCollapsed(ord, collapsedByDefault);
+            CollapsibleFields.setEmptyStatus(ord, empty);
+        });
     },
     addIconToField: (field, icon) => {
-        field.labelContainer.insertBefore(icon, field.labelContainer.label.nextSibling)
-        field.labelContainer.style.setProperty("justify-content", "flex-end")
-
-        // move label back to the left
-        field.labelContainer.label.style.setProperty("margin-right", "auto")
+        field.labelContainer.insertBefore(icon, field.labelContainer.label);
+        field.labelContainer.label.style.setProperty("margin-right", "auto");
     },
-}
+};
